@@ -1,0 +1,61 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "fbk-train",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/tony/FBK-Fairseq-ST/train.py",
+            "console": "integratedTerminal",
+            "args": ["/home/tony/aishell_corpus/ch-ch-bin",
+                "--clip-norm" , "20",
+                "--max-sentences" , "20",
+                "--max-tokens" , "30000",
+                "--save-dir" , "/home/tony/aishell_corpus/checkpoints/ch-ch",
+                "--max-epoch" , "100",
+                "--no-cache-source",
+                "--lr" , "5e-3",
+                "--lr-shrink" , "1.0",
+                "--min-lr" , "1e-08",
+                "--dropout" , "0.1",
+                "--lr-schedule" , "inverse_sqrt",
+                "--warmup-updates" , "4000",
+                "--warmup-init-lr" , "3e-4",
+                "--optimizer" , "adam",
+                "--arch" , "speechconvtransformer_paper",
+                "--task" , "translation",
+                "--skip-invalid-size-inputs-valid-test",
+                "--max-source-positions" , "2000",
+                "--max-target-positions" , "1000",
+                "--update-freq" , "16",
+                "--criterion" , "label_smoothed_cross_entropy",
+                "--label-smoothing" , "0.1",
+                "--normalization-constant" , "1.0",
+                "--sentence-avg",
+                "--audio-input" , 
+                "-s","h5",
+                "-t", "ch",
+                "--distance-penalty" , "log",
+                "--no-epoch-checkpoints" 
+            ]
+        },
+        {
+            "name": "fbk-gen",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/tony/FBK-Fairseq-ST/generate.py",
+            "console": "integratedTerminal",
+            "args": ["/home/tony/aishell_corpus/ch-vi-mt-bin",
+                "--path","/home/tony/aishell_corpus/checkpoints/ch-vi-mt/checkpoint_best.pt",
+                "--task","translation",
+                "--gen-subset","valid",
+                // "--beam","5",
+                "--batch","32",
+                "--skip-invalid-size-inputs-valid-test",
+            ]
+        }
+    ]
+}

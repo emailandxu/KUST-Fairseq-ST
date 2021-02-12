@@ -22,6 +22,7 @@ class BeamableMM(nn.Module):
         self.beam_size = beam_size
 
     def forward(self, input1, input2):
+        # self.beam_size = None #in case of the view error below
         if (
             not self.training and           # test mode
             self.beam_size is not None and  # beam size is set

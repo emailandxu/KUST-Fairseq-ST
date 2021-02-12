@@ -17,7 +17,8 @@ python /home/tony/FBK-Fairseq-ST/preprocess.py \
 --trainpref $raw_path/train \
 --validpref $raw_path/dev \
 --testpref $raw_path/test \
---destdir $bin_path
+--destdir $bin_path \
+--workers 6
 ```
 # Train
 ```
@@ -25,7 +26,7 @@ python /home/tony/FBK-Fairseq-ST/preprocess.py \
   --clip-norm 20 \
   --max-sentences 20 \
   --max-tokens 30000 \
-  --save-dir /home/tony/aishell_corpus/checkpoints/ch-vi \
+  --save-dir /home/tony/aishell_corpus/checkpoints/ch-vi-xtransformer \
   --max-epoch 100 \
   --no-cache-source \
   --lr 5e-3 \
@@ -36,7 +37,7 @@ python /home/tony/FBK-Fairseq-ST/preprocess.py \
   --warmup-updates 4000 \
   --warmup-init-lr 3e-4 \
   --optimizer adam \
-  --arch speechconvtransformer_paper \
+  --arch x_transformer_small_conv \
   --task translation \
   --skip-invalid-size-inputs-valid-test \
   --max-source-positions 2000 \
