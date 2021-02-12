@@ -19,7 +19,12 @@ from fairseq import distributed_utils, options, progress_bar, tasks, utils
 from fairseq.data import iterators
 from fairseq.trainer import Trainer
 from fairseq.meters import AverageMeter, StopwatchMeter
+from torch.utils.tensorboard import SummaryWriter   
+import datetime
 
+
+tensorborad_dir = os.path.join(os.path.dirname(__file__)+"/logs/", datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+summary_writer = SummaryWriter(tensorborad_dir)
 
 def main(args):
     if args.max_tokens is None:
@@ -96,7 +101,7 @@ def main(args):
 
         if epoch_itr.epoch % args.validate_interval == 0:
             valid_losses = validate(args, trainer, task, epoch_itr, valid_subsets)
-
+            summary_writer.add_scalar("val_loss", valid_losses[0], epoch_itr.epoch)
         # only use first validation loss to update the learning rate
         lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
 
@@ -159,7 +164,17 @@ def train(args, trainer, task, epoch_itr):
     stats = get_training_stats(trainer)
     for k, meter in extra_meters.items():
         stats[k] = meter.avg
-    progress.print(stats,file=open(f"{args.save_dir}/log.txt",'a'))
+    
+    # progress.print(stats,file=open(f"{args.save_dir}/log.txt",'a'))
+    progress.print(stats)
+    # writting tensorboard
+    for k,v in stats.items():
+        if type(v) == type(""):
+            try:
+                v = float(v)
+            except ValueError as e:
+                continue
+        summary_writer.add_scalar(k,v,epoch_itr.epoch)
 
     # reset training meters
     for k in [

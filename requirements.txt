@@ -2,4 +2,4 @@ cffi
 numpy
 torch==1.2.0
 tqdm
-fairseq
+# fairseq
